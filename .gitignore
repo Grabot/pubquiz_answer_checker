@@ -249,3 +249,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+venv/
+venv/*
+
+*.idea/
+*.idea/*
