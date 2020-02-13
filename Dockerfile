@@ -1,22 +1,30 @@
-FROM python:3.6.1
+FROM tensorflow/tensorflow:latest-gpu-py3
 
-RUN mkdir /code
-WORKDIR /code
-ADD requirements.txt /code/
-RUN pip install -r requirements.txt
-ADD . /code/
+# set a directory for the app
+WORKDIR /usr/src/app
 
-# ssh
-ENV SSH_PASSWD "root:Docker!"
-RUN apt-get update \
-        && apt-get install -y --no-install-recommends dialog \
-        && apt-get update \
-	&& apt-get install -y --no-install-recommends openssh-server \
-	&& echo "$SSH_PASSWD" | chpasswd 
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-COPY sshd_config /etc/ssh/
-COPY init.sh /usr/local/bin/
-	
-RUN chmod u+x /usr/local/bin/init.sh
-EXPOSE 5000 2222
-ENTRYPOINT ["init.sh"]
+# copy all the files to the container
+COPY . .
+
+# install dependencies
+RUN pip install --upgrade pip
+RUN apt-get update
+RUN apt-get install poppler-utils -y
+RUN apt-get install -y libsm6 libxext6 libxrender-dev
+RUN apt-get update && apt-get install -y tesseract-ocr-all
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+# run the command
+#CMD ["python", "./home.py"]
+
+ENV FLASK_APP "home.py"
+ENV FLASK_ENV "development"
+ENV FLASK_DEBUG True
+
+EXPOSE 5000
+
+CMD flask run --host=0.0.0.0
