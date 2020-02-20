@@ -253,5 +253,7 @@ target/
 venv/
 venv/*
 
+.flaskenv
+
 *.idea/
 *.idea/*
