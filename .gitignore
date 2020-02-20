@@ -254,6 +254,7 @@ venv/
 venv/*
 
 .flaskenv
+*.flaskenv
 
 *.idea/
 *.idea/*
