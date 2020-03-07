@@ -12,54 +12,49 @@
 {% block content %}
 
 
-<div class="container"  ng-app="answerCheckingModule" ng-controller ="answerCheckingController as vm">
+<div class="answertable" ng-app="answerCheckingModule" ng-controller ="answerCheckingController as vm">
      <div class="alert alert-info" role="alert" ng-show="{{message}}">
         {{message}}
     </div>
     <div id="myModal" class="modal">
         <!-- Modal content -->
-        <div class="modal-content" ng-mouseLeave="vm.closeModal()">
-            <span class="close" ng-click="vm.closeModal()">&times;</span>
+        <div class="modal-content">
+            <span class="close" ng-click="vm.closeModal()" >&times;</span>
             <div>
                 <label class="filter-label">Team:</label>
-                <select class="filter-dropdown" ng-model="filteredTeam">
+                <select class="filter-dropdown" ng-model="vm.filteredTeam">
                     <option ng-value="">Alle teams</option>
-                    <option ng-repeat="team in vm.teams">//team.teamname//</option>
+                    <option ng-repeat="team in vm.teams" ng-value="team">//team.teamname//</option>
                 </select>
             </div>
             <div>
-                <label class="filter-label">Team:</label>
-                <select class="filter-dropdown" ng-model="filteredCategory">
+                <label class="filter-label">Categorie:</label>
+                <select class="filter-dropdown" ng-model="vm.filteredCategory">
                     <option ng-value="">Alle Categorieen</option>
-                    <option ng-repeat="category in vm.categories">//category.name//</option>
+                    <option ng-repeat="category in vm.categories" ng-value="category">//category.name//</option>
                 </select>
             </div>
             <div>
                 <label class="filter-label">Vraag:</label>
-                <select class="filter-dropdown" ng-model="filteredQuestion">
+                <select class="filter-dropdown" ng-model="vm.filteredQuestion">
                     <option ng-value="">Alle vragen</option>
                     <option ng-repeat="question in vm.questions" ng-value="question">//question.questionnumber// //question.question//</option>
                 </select>
             </div>
             <div>
-                <label class="filter-label">Correct:</label>
-                <select class="filter-dropdown" ng-model="correctfilter">
-                    <option ng-value=''>Alles</option>
-                    <option ng-value=true>Ja</option>
-                    <option ng-value=false>Nee</option>
-                </select>
-            </div>
-            <div>
                 <label class="filter-label">Laatst nagekeken door:</label>
-                <select class="filter-dropdown" ng-model = "checkedbyfilter">
+                <select class="filter-dropdown" ng-model = "vm.filteredCheckedby">
                     <option ng-value="">Iedereen</option>
-                    <option ng-repeat="person in vm.persons">//person.personname//</option>
+                    <option ng-repeat="person in vm.persons" ng-value="person">//person.personname//</option>
                 </select>
             </div>
             <div>
                 <label class="filter-label">Zekerheid:</label>
-                <span class="valuePadding input-holder"><input placeholder="Van" type="number"  ng-model="confidencefrom" style="text-align:left;"></span>
-                <span class="valuePadding input-holder"><input placeholder="Tot" type="number"  ng-model="confidenceto" style="text-align:left;"></span>
+                <span class="valuePadding input-holder"><input placeholder="Van" type="number"  ng-model="vm.confidenceFrom" style="text-align:left;"></span>
+                <span class="valuePadding input-holder"><input placeholder="Tot" type="number"  ng-model="vm.confidenceTo" style="text-align:left;"></span>
+            </div>
+            <div>
+                <button class="btn btn-primary" ng-click="vm.closeModal(); vm.updateAnswers()">Opslaan</button>
             </div>
         </div>
     </div>
@@ -68,22 +63,21 @@
         <table class="table table-hover table-sm table-fixed">
             <thead class="header">
                 <tr>
-                    <th scope="col" ng-click="vm.sortBy('answered_by.teamname')">Team</th>
-                    <th scope="col" ng-click="vm.sortBy('question.questionnumber')">Vraag</th>
-                    <th scope="col">Correct Antwoord</th>
-                    <th scope="col">Gegeven Antwoord</th>
-                    <th scope="col" style="width:300px;">Afbeelding</th>
-                    <th scope="col" style="width:60px;">Correct</th>
-                    <th scope="col" style="width:100px;">Zekerheid systeem</th>
-                    <th scope="col" ng-click = "vm.sortBy('checkedby.personname')">Laatst nagekeken door</th>
+                    <th scope="col" ng-click="vm.sortBy('answered_by.teamname')" style="width:15%;">Team</th>
+                    <th scope="col" ng-click="vm.sortBy('question.questionnumber')" style="width:25%;">Vraag</th>
+                    <th scope="col" style="width:15%;">Correct Antwoord</th>
+                    <th scope="col" style="width:15%;">Gegeven Antwoord</th>
+                    <th scope="col" style="width:500px;">Afbeelding</th>
+                    <th scope="col" style="width:5%;">Correct</th>
+                    <th scope="col" style="width:7%;">Zekerheid systeem</th>
+                    <th scope="col" style="width:165px;" ng-click = "vm.sortBy('checkedby.personname')">Laatst nagekeken door</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="answergiven in filteredanswers = (vm.answers | orderBy:vm.propertyName:vm.reverse | byCategory:filteredCategory | byTeam:filteredTeam | byQuestion:filteredQuestion | bySubanswers:confidencefrom:confidenceto:correctfilter:checkedbyfilter)">
-
-                    <td>//answergiven.answered_by.teamname//</td>
-                    <td><b>//answergiven.question.questionnumber//</b> //answergiven.question.question//</td>
-                    <td>
+                <tr ng-repeat="answergiven in vm.filteredanswers = (vm.answers | orderBy:vm.propertyName:vm.reverse | startFrom:vm.currentPage*vm.pageSize | limitTo:vm.pageSize)">
+                    <td style="width:15%;">//answergiven.answered_by.teamname//</td>
+                    <td style="width:25%;"><b>//answergiven.question.questionnumber//</b> //answergiven.question.question//</td>
+                    <td style="width:15%;">
                         <div id = 'subanswerintable'>
                             <table class="table table-borderless">
                                 <tbody>
@@ -94,19 +88,19 @@
                             </table>
                         </div>
                     </td>
-                    <td>
+                    <td style="width:15%;">
                          <table class="table table-borderless">
                             <tbody>
-                                <tr ng-repeat="subanswergiven in answergiven.subanswersgiven | byConfidence:confidencefrom:confidenceto | byCorrect:correctfilter | byChecked:checkedbyfilter">
+                                <tr ng-repeat="subanswergiven in answergiven.subanswersgiven">
                                     <td>//subanswergiven.read_answer//</td>
                                 </tr>
                             </tbody>
                         </table>
                     </td>
-                    <td style="width:300px;">
+                    <td style="width:500px;">
                        <table class="table table-borderless">
                             <tbody>
-                                <tr ng-repeat="subanswergiven in answergiven.subanswersgiven | byConfidence:confidencefrom:confidenceto | byCorrect:correctfilter | byChecked:checkedbyfilter">
+                                <tr ng-repeat="subanswergiven in answergiven.subanswersgiven">
                                     <td>
                                         <img width="100%" src="lines/load/line_//subanswergiven.line.id//">
                                     </td>
@@ -114,10 +108,10 @@
                             </tbody>
                        </table>
                     </td>
-                    <td style="width:60px;">
+                    <td style="width:5%;">
                         <table class="table table-borderless">
                                 <tbody>
-                                    <tr ng-repeat="subanswergiven in answergiven.subanswersgiven | byConfidence:confidencefrom:confidenceto | byCorrect:correctfilter | byChecked:checkedbyfilter">
+                                    <tr ng-repeat="subanswergiven in answergiven.subanswersgiven">
                                         <td>
                                             <label class="switch"><input type="checkbox" ng-model="subanswergiven.correct" ng-change="vm.updateAnswerCheck(subanswergiven)"><span class="slider round"></span></label>
                                         </td>
@@ -125,10 +119,10 @@
                                 </tbody>
                         </table>
                     </td>
-                    <td style="width:100px;">
+                    <td style="width:7%;">
                         <table class="table table-borderless">
                             <tbody>
-                                <tr ng-repeat="subanswergiven in answergiven.subanswersgiven | byConfidence:confidencefrom:confidenceto | byCorrect:correctfilter | byChecked:checkedbyfilter">
+                                <tr ng-repeat="subanswergiven in answergiven.subanswersgiven">
                                     <td>
                                         <td>//subanswergiven.confidence//%</td>
                                     </td>
@@ -136,10 +130,10 @@
                             </tbody>
                         </table>
                     </td>
-                    <td>
+                    <td style="width:155px;">
                         <table class="table table-borderless">
                             <tbody>
-                                <tr ng-repeat="subanswergiven in answergiven.subanswersgiven | byConfidence:confidencefrom:confidenceto | byCorrect:correctfilter | byChecked:checkedbyfilter">
+                                <tr ng-repeat="subanswergiven in answergiven.subanswersgiven">
                                     <td>
                                         <td>//subanswergiven.checkedby.personname//</td>
                                     </td>
@@ -149,18 +143,19 @@
                     </td>
                 </tr>
             </tbody>
+
         </table>
-        <!--
-        <div class = 'wrapperhorizontal'>
-             <button class = 'btn btn-primary' ng-disabled="pageNum== 0" ng-click="pageNum=pageNum-1">
-            Vorige
+
+        <div class="container">
+            <button class="btn btn-primary" ng-click="vm.currentPage=vm.currentPage-1">
+                Vorige
             </button>
-            <label>//pageNum+1// / //numberOfPages()//</label>
-            <button class = 'btn btn-primary' ng-disabled="pageNum >= filteredanswers.length/perPage - 1" ng-click="pageNum=pageNum+1">
-            Volgende
+                //currentPage+1// / //vm.numberOfPages()//
+            <button class="btn btn-primary" ng-click="vm.currentPage=vm.currentPage+1">
+                Volgende
             </button>
         </div>
-        -->
+
         <div>
             {% if session['logged_in'] == True %}
             <button class="btn btn-primary" ng-click = "vm.deleteAllAnswers()">Verwijder alle antwoorden</button>

@@ -2,9 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="70c05f69-c465-4732-ad1b-072ea199327e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/view/routes/cv.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flaskenv" beforeDir="false" afterPath="$PROJECT_DIR$/.flaskenv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/answer_checking/answer_checker.py" beforeDir="false" afterPath="$PROJECT_DIR$/answer_checking/answer_checker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/docs.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/docs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/line_segmentation.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/line_segmentation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/pdf_to_image.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/pdf_to_image.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/process_question_number.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/process_question_number.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/process_team.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/process_team.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/save_to_database.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/save_to_database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/word_segmentation.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/word_segmentation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/routes/answer_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/routes/answer_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/routes/answersheet_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/routes/answersheet_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/routes/line_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/routes/line_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/routes/question_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/routes/question_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/routes/render_templates_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/view/routes/render_templates_routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/static/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/view/static/css/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/static/css/revealwinner.css" beforeDir="false" afterPath="$PROJECT_DIR$/view/static/css/revealwinner.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/static/js/answerchecking.js" beforeDir="false" afterPath="$PROJECT_DIR$/view/static/js/answerchecking.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/static/js/filters.js" beforeDir="false" afterPath="$PROJECT_DIR$/view/static/js/filters.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/static/js/questions.js" beforeDir="false" afterPath="$PROJECT_DIR$/view/static/js/questions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/static/js/requests.js" beforeDir="false" afterPath="$PROJECT_DIR$/view/static/js/requests.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/static/js/revealwinner.js" beforeDir="false" afterPath="$PROJECT_DIR$/view/static/js/revealwinner.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/templates/answerchecking.html" beforeDir="false" afterPath="$PROJECT_DIR$/view/templates/answerchecking.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/templates/questions.html" beforeDir="false" afterPath="$PROJECT_DIR$/view/templates/questions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/templates/revealwinner.html" beforeDir="false" afterPath="$PROJECT_DIR$/view/templates/revealwinner.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

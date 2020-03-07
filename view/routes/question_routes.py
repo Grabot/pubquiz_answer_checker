@@ -1,6 +1,8 @@
 from view import view, db
 from flask import request, session, jsonify, url_for, flash
-from view.models import Question, QuestionSchema, SubAnswer, Variant, Category, CategorySchema, Person, PersonSchema, AnswerGiven, AnswerGivenSchema
+from view.models import Question, QuestionSchema, SubAnswer, Variant, Category, CategorySchema, Person, PersonSchema, AnswerGiven, AnswerGivenSchema, SubAnswerGiven, Team
+from view.config import Config
+from flask import render_template
 
 
 @view.route('/api/v1.0/questions', methods=['GET'])
@@ -38,7 +40,189 @@ def get_persons():
 @view.route('/api/v1.0/answers', methods=['GET'])
 def get_answers():
     answers_schema = AnswerGivenSchema(many=True)
-    allanswers = AnswerGiven.query.all()
+    question_id = request.args.get('question_id', 0, type=int)
+    team_id = request.args.get('team_id', 0, type=int)
+    category_id = request.args.get('category_id', 0, type=int)
+    # checked_by is the person_id
+    person_id = request.args.get('checkedby_id', 0, type=int)
+    confidence_from = request.args.get('confidence_from', None, type=int)
+    confidence_to = request.args.get('confidence_to', None, type=int)
+    # Wow this is a mess! The others are filtered by things separate! Even though it will load a lot more,
+    # it will be a lot less than loading everything
+    # This filters 'category', 'question', 'person' and 'team' or any combination of these.
+    if category_id != 0:
+        if question_id == 0 \
+                and team_id == 0 \
+                and person_id == 0:
+            questions = Question.query.filter_by(category_id=category_id).all()
+            question_ids = []
+            for q in questions:
+                question_ids.append(q.id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.question_id.in_((question_ids)))
+        elif question_id != 0 \
+                and team_id == 0 \
+                and person_id == 0:
+            questions = Question.query.filter_by(category_id=category_id, id=question_id).all()
+            question_ids = []
+            for q in questions:
+                question_ids.append(q.id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.question_id.in_((question_ids)))
+        elif question_id == 0 \
+                and team_id != 0 \
+                and person_id == 0:
+            questions = Question.query.filter_by(category_id=category_id).all()
+            question_ids = []
+            for q in questions:
+                question_ids.append(q.id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.question_id.in_((question_ids))).filter_by(team_id=team_id)
+        elif question_id != 0 \
+                and team_id != 0 \
+                and person_id == 0:
+            questions = Question.query.filter_by(category_id=category_id, id=question_id).all()
+            question_ids = []
+            for q in questions:
+                question_ids.append(q.id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.question_id.in_((question_ids)))\
+                .filter_by(team_id=team_id, question_id=question_id)
+        elif question_id == 0 \
+                and team_id == 0 \
+                and person_id != 0:
+            questions = Question.query.filter_by(category_id=category_id).all()
+            question_ids = []
+            for q in questions:
+                question_ids.append(q.id)
+            sub_answer_given = SubAnswerGiven.query.filter_by(person_id=person_id).all()
+            ids = []
+            for q in sub_answer_given:
+                ids.append(q.answergiven_id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.id.in_((ids))).filter(AnswerGiven.question_id.in_((question_ids)))
+        elif question_id == 0 \
+                and team_id != 0 \
+                and person_id != 0:
+            questions = Question.query.filter_by(category_id=category_id).all()
+            question_ids = []
+            for q in questions:
+                question_ids.append(q.id)
+            sub_answer_given = SubAnswerGiven.query.filter_by(person_id=person_id).all()
+            ids = []
+            for q in sub_answer_given:
+                ids.append(q.answergiven_id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.id.in_((ids))).filter(AnswerGiven.question_id.in_((question_ids))).filter_by(team_id=team_id)
+        elif question_id != 0 \
+                and team_id == 0 \
+                and person_id != 0:
+            questions = Question.query.filter_by(category_id=category_id, id=question_id).all()
+            question_ids = []
+            for q in questions:
+                question_ids.append(q.id)
+            sub_answer_given = SubAnswerGiven.query.filter_by(person_id=person_id).all()
+            ids = []
+            for q in sub_answer_given:
+                ids.append(q.answergiven_id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.id.in_((ids))).filter(AnswerGiven.question_id.in_((question_ids)))
+        elif question_id != 0 \
+                and team_id != 0 \
+                and person_id != 0:
+            questions = Question.query.filter_by(category_id=category_id, id=question_id).all()
+            question_ids = []
+            for q in questions:
+                question_ids.append(q.id)
+            sub_answer_given = SubAnswerGiven.query.filter_by(person_id=person_id).all()
+            ids = []
+            for q in sub_answer_given:
+                ids.append(q.answergiven_id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.id.in_((ids))).filter(
+                AnswerGiven.question_id.in_((question_ids))).filter_by(team_id=team_id)
+    else:
+        if question_id != 0 \
+                and team_id == 0 \
+                and person_id == 0:
+            allanswers = AnswerGiven.query.filter_by(question_id=question_id)
+        elif question_id == 0 \
+                and team_id != 0 \
+                and person_id == 0:
+            allanswers = AnswerGiven.query.filter_by(team_id=team_id)
+        elif question_id != 0 \
+                and team_id != 0 \
+                and person_id == 0:
+            allanswers = AnswerGiven.query.filter_by(question_id=question_id, team_id=team_id)
+        elif question_id == 0 \
+                and team_id == 0 \
+                and person_id != 0:
+            sub_answer_given = SubAnswerGiven.query.filter_by(person_id=person_id).all()
+            ids = []
+            for q in sub_answer_given:
+                ids.append(q.answergiven_id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.id.in_((ids)))
+        elif question_id == 0 \
+                and team_id != 0 \
+                and person_id != 0:
+            sub_answer_given = SubAnswerGiven.query.filter_by(person_id=person_id).all()
+            ids = []
+            for q in sub_answer_given:
+                ids.append(q.answergiven_id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.id.in_((ids))).filter_by(team_id=team_id)
+        elif question_id != 0 \
+                and team_id == 0 \
+                and person_id != 0:
+            sub_answer_given = SubAnswerGiven.query.filter_by(person_id=person_id).all()
+            ids = []
+            for q in sub_answer_given:
+                ids.append(q.answergiven_id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.id.in_((ids))).filter_by(question_id=question_id)
+        elif question_id != 0 \
+                and team_id != 0 \
+                and person_id != 0:
+            sub_answer_given = SubAnswerGiven.query.filter_by(person_id=person_id).all()
+            ids = []
+            for q in sub_answer_given:
+                ids.append(q.answergiven_id)
+            allanswers = AnswerGiven.query.filter(AnswerGiven.id.in_((ids))).filter_by(team_id=team_id, question_id=question_id)
+        else:
+            print("something went wrong")
+            allanswers = AnswerGiven.query.all()
+
+    # This filters 'confidence_from' and 'confidence_to'
+    # After the initial filtering we filter out the confidence.
+    if confidence_to is not None:
+        # We set the confidence_from to 0 if nothing is filled, because it seems logical from a user perspective.
+        if confidence_from is None:
+            confidence_from = 0
+        answersgiven_ids = []
+        for item in allanswers:
+            answer_given = AnswerGiven.query.filter_by(id=item.id).first()
+            if answer_given is not None:
+                sub_answer_givens = answer_given.subanswersgiven
+                for sub_answer_given in sub_answer_givens:
+                    confidence = sub_answer_given.confidence
+                    # We now filter out any confidences that we don't want to show.
+                    if confidence <= confidence_to:
+                        # The confidence is below 'confidence_to'. When also above 'confidence_from' We will show it.
+                        if confidence >= confidence_from:
+                            if item.id not in answersgiven_ids:
+                                answersgiven_ids.append(item.id)
+        allanswers = AnswerGiven.query.filter(AnswerGiven.id.in_((answersgiven_ids)))
+
+    # This filters a special case of 'confidence_from' and 'confidence_to'
+    if confidence_to is None and confidence_from is not None:
+        # If the user only gave a confidence_from we only filter out those values
+        answersgiven_ids = []
+        for item in allanswers:
+            answer_given = AnswerGiven.query.filter_by(id=item.id).first()
+            if answer_given is not None:
+                sub_answer_givens = answer_given.subanswersgiven
+                for sub_answer_given in sub_answer_givens:
+                    confidence = sub_answer_given.confidence
+                    # We now filter out any confidences that we don't want to show.
+                    if confidence >= confidence_from:
+                        if item.id not in answersgiven_ids:
+                            answersgiven_ids.append(item.id)
+        allanswers = AnswerGiven.query.filter(AnswerGiven.id.in_((answersgiven_ids)))
+
+    if question_id == 0 and team_id == 0 and category_id == 0 and person_id == 0 and confidence_from is None and confidence_to is None:
+        # If none of the filters are given, we set a default filtering, which I'll set to a question
+           allanswers = AnswerGiven.query.paginate(1, 100, False).items
+
     result = answers_schema.dump(allanswers)
     return jsonify(result)
 
@@ -169,5 +353,4 @@ def remove_category():
     except:
         return 'Categorie kan niet verwijderd worden. Er zijn nog vragen gekoppeld aan deze categorie'
     return 'OK'
-
 

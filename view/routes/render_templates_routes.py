@@ -1,6 +1,7 @@
 from view import view
 from flask import render_template, session, request, redirect, flash, url_for
 from view.models import Person, SubAnswerGiven
+from view.config import Config
 
 
 @view.route('/')
@@ -16,6 +17,20 @@ def questions():
 
 @view.route('/answerchecking')
 def answers():
+    vraag = request.args.get('vraag', 0, type=int)
+    Config.vraag = vraag
+    team = request.args.get('team', 0, type=int)
+    Config.team = team
+    categorie = request.args.get('categorie', 0, type=int)
+    Config.categorie = categorie
+    correct = request.args.get('correct', 0, type=int)
+    Config.correct = correct
+    nagekeken_door = request.args.get('nagekeken_door', 0, type=int)
+    Config.nagekeken_door = nagekeken_door
+    zekerheid_van = request.args.get('zekerheid_van', 0, type=int)
+    Config.zekerheid_van = zekerheid_van
+    zekerheid_tot = request.args.get('zekerheid_tot', 0, type=int)
+    Config.zekerheid_tot = zekerheid_tot
     if 'message' in request.args:
         message = request.args['message']
         return render_template('answerchecking.html', message=message)

@@ -105,7 +105,7 @@ def find_corners_center(corners_left, corners_right):
     return corners_full
 
 
-def line_segmentation(answer_image_original, answersheet_id):
+def line_segmentation(answer_image_original):
     # New strategy. First find the points on the left side and then on the right side.
     # Than take the points together and find the lines.
     # processed = pre_process_image(answer_image_original, False)
@@ -132,7 +132,7 @@ def line_segmentation(answer_image_original, answersheet_id):
         area = cv2.contourArea(c)
         # Area is about 100000 with the line we defined
         # TODO Fix magic numbers We chose these area numbers to be the area size of the contours found left and right
-        if 15000 < area < 25000:
+        if 20000 < area < 30000:
             left_block_contours.append(c)
 
     cv2.drawContours(left_side_img, left_block_contours, -1, (255, 0, 0), thickness=10)
@@ -154,7 +154,7 @@ def line_segmentation(answer_image_original, answersheet_id):
     for c in contours_right_side:
         area = cv2.contourArea(c)
         # Area is about 60000 with the line we defined
-        if 8000 < area < 16000:
+        if 4000 < area < 12500:
             right_block_contours.append(c)
 
     cv2.drawContours(right_side_img, right_block_contours, -1, (255, 0, 0), thickness=10)
@@ -197,9 +197,7 @@ def line_segmentation(answer_image_original, answersheet_id):
         answer = full_line.tostring()
 
         if db is not None:
-            # TODO fill in the other details as well! (not just the image)
             new_line = Line(
-                answersheet_id=answersheet_id,
                 line_image=answer,
                 image_width=line_width,
                 image_height=line_height
