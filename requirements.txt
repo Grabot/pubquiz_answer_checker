@@ -21,7 +21,7 @@ Flask-Triangle==0.5.4
 fuzzywuzzy==0.17.0
 gast==0.2.2
 google-pasta==0.1.8
-grpcio==1.25.0
+grpcio==1.53.0
 h5py==2.10.0
 idna==2.6
 importlib-metadata==0.23
