@@ -9,7 +9,7 @@ cryptography==3.2
 cycler==0.10.0
 dominate==2.4.0
 editdistance==0.5.3
-Flask==1.1.1
+Flask==2.2.5
 Flask-Bootstrap==3.3.7.1
 Flask-Cors==3.0.9
 Flask-Login==0.4.1
